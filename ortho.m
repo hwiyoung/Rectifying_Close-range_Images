@@ -27,6 +27,14 @@ d = dot(nv, p{1});
 y_basis = cross(nv, v1);         % y-axis
 new_basis = [v1 y_basis nv];     % Basis of Plane
 
+% % Visualize the basis vector
+% CoP = p{1};     % Center of Plane
+% RoP = [v1/norm(v1) y_basis/norm(y_basis) nv/norm(nv)];
+% hold on;
+% vis_coord_system(CoP, RoP, 5, '', 'r');
+% grid on, axis equal;
+% xlabel('X'), ylabel('Y'), zlabel('Z');
+
 %% Creating orthophoto
 
 EO_all = [151448.381224	360608.187181 51.007198 120.547791 36.035759 -21.870075];    % IMG_20160831_140354.jpg
