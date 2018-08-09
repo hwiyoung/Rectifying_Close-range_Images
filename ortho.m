@@ -6,8 +6,14 @@ clc
 clearvars
 close all
 %% input value
+% TG-L800s
 pixel_size = 1.25e-6;
 focal_length = 3.85e-3;
+
+% % iPhone 7
+% pixel_size = 0.00122331e-3; % m
+% focal_length = 3.99e-3;     % m
+
 gsd = 0.01;
 
 %% Define the Target Surface
