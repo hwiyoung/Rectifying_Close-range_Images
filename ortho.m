@@ -14,8 +14,6 @@ focal_length = 3.85e-3;
 % pixel_size = 0.00122331e-3; % m
 % focal_length = 3.99e-3;     % m
 
-gsd = 0.01;
-
 %% Define the Target Surface
 
 % IMG_20160831_140354.jpg
@@ -58,15 +56,17 @@ for i=3:3
     % and new coordinate system of target surface
     [g_c, u, proj_coord, new_proj_coord] = vertex_g(pixel_cnt, pixel_size, focal_length, EO, R, new_basis, d, p);
     
-    %% 가상의 DEM 생성
+    %% Generation of virtual DEM
+    gsd = computeGSD(EO, R, nv, d, focal_length, pixel_size);   % m/pix
+    gsd = gsd*2;
+    
     col_s = (g_c(2)-g_c(1))/gsd
     row_s = (g_c(4)-g_c(3))/gsd
-
-    %% dem생성 및 dem의 row, column 계산
+    
     dem = dem_m(g_c, ceil(row_s), ceil(col_s), gsd, g_c(6));
     converted_dem = convert_dem(u, dem);
     
-    %% 이미지 좌표 계산, 화소값 가져오기 // 상대좌표
+    %% Re-projection of image coordinates
     xyz_eo = [EO(1) EO(2) EO(3)];
     xy_ics = image_coordinate(converted_dem, R, xyz_eo, focal_length, pixel_size, pixel_cnt);
     
@@ -74,11 +74,11 @@ for i=3:3
     FG = pixel_color(pixel_cnt, xy_ics, img, 2);
     FB = pixel_color(pixel_cnt, xy_ics, img, 3);
 
-    %% 각 화소값들 모아서 출력 및 저장
+    %% Pixel resampling
     rgb_image = cat(3, FR, FG, FB);
 
     figure;
     imshow(rgb_image);
-    imwrite(rgb_image, 'rectified.png'); 
+    imwrite(rgb_image, 'rectified.JPG'); 
  
 end
