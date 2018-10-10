@@ -20,7 +20,6 @@ function [g_c, u_norm, proj_coord, p] = vertex_g(pixel_cnt, pixel_size, focal_le
 
 %   PoP : points of the plane
 
-    %% Visualize the boundary in original coordinates system
     % Coordinates of image vertices in Camera Coordinate System
     image_xy{1} = [pixel_cnt(2)*pixel_size/2, pixel_cnt(1)*pixel_size/2, -focal_length]';    % TR
     image_xy{2} = [pixel_cnt(2)*pixel_size/2, -pixel_cnt(1)*pixel_size/2, -focal_length]';   % BR
@@ -41,25 +40,28 @@ function [g_c, u_norm, proj_coord, p] = vertex_g(pixel_cnt, pixel_size, focal_le
     face = [1 2 3 4];
     patch('Faces', face, 'Vertices', vertex_proj, 'FaceAlpha', 0, 'EdgeColor', [0 0 1], 'LineWidth', 2);
     
+%     ux = (proj_coord{2} - proj_coord{3});
     ux = u(:,1) / norm(u(:,1));       % normalized virtual axis1 - ux
     uz = u(:,3) / norm(u(:,3));
     uy = cross(uz, ux);               % normalized virtual axis2 - uy
     u_norm = [ux uy uz];
     
     % Visualize the basis vector
+%     CoP = proj_coord{3};        % Center of Plane
+%     RoP = [ux uy uz];           % Rotation of Plane
     hold on;
+%     vis_coord_system(CoP, u_norm, 10, sprintf('proj. basis'), 'b');
     grid on, axis equal;
     xlabel('X'), ylabel('Y'), zlabel('Z');
-    title('Original Coordinate System');
     
     plot3([PoP{1}(1) PoP{2}(1)], [PoP{1}(2) PoP{2}(2)], [PoP{1}(3) PoP{2}(3)]);
     plot3([PoP{1}(1) PoP{3}(1)], [PoP{1}(2) PoP{3}(2)], [PoP{1}(3) PoP{3}(3)]);
     
-    %% Visualize the boundary in changed coordinates system
     % converting to new(virtual) coordinate systems
     p = cell(4,1);
     for i=1:4
         p{i} = u_norm' * proj_coord{i};  % originally, inv(u)*proj_coord{i}
+%         p{i} = u_norm' * (proj_coord{i} - proj_coord{3});
     end
 
     edge_x=[p{1}(1) p{2}(1) p{3}(1) p{4}(1)];
@@ -73,26 +75,42 @@ function [g_c, u_norm, proj_coord, p] = vertex_g(pixel_cnt, pixel_size, focal_le
     new_PoP = cell(3,1);
     for i=1:3
         new_PoP{i} = u_norm' * PoP{i};  % originally, inv(u)*proj_coord{i}
+%         p{i} = u_norm' * (proj_coord{i} - proj_coord{3});
     end
     
     % visualize the boundary
     figure;
     vertex_gc = cell2mat(p')';
     patch('Faces', face,'Vertices', vertex_gc, 'FaceAlpha', 0, 'EdgeColor', [0 0 1], 'LineWidth', 5);
+    view(3), grid on;
+    xlabel('X'), ylabel('Y'), zlabel('Z');
     
-    % visualize the basis vector
+%     % check the change basis
+%     for i=1:4
+%         hold on;
+%         scatter3(p{i}(1), p{i}(2), p{i}(3), 'filled');
+%         text(p{i}(1), p{i}(2), p{i}(3), sprintf('%d', i));
+%     end
+%     for i=1:3
+%         hold on;
+%         scatter3(new_PoP{i}(1), new_PoP{i}(2), new_PoP{i}(3));
+%         text(new_PoP{i}(1), new_PoP{i}(2), new_PoP{i}(3), sprintf('%d', i));
+%     end
+%     plot3([new_PoP{1}(1) new_PoP{2}(1)], [new_PoP{1}(2) new_PoP{2}(2)], [new_PoP{1}(3) new_PoP{2}(3)]);
+%     plot3([new_PoP{1}(1) new_PoP{3}(1)], [new_PoP{1}(2) new_PoP{3}(2)], [new_PoP{1}(3) new_PoP{3}(3)]);
+    
+    % Visualize the basis vector
     CoP = new_PoP{1};                 % Center of Plane
     RoP = eye(3);
     hold on;
     vis_coord_system(CoP, RoP, 5, '', 'r');
-        
+    grid on, axis equal;
+    xlabel('X'), ylabel('Y'), zlabel('Z');
+    
     hold on;
     vertex_gc_boundary = [max(edge_x) max(edge_y) max(edge_z); max(edge_x) min(edge_y) max(edge_z); ...
         min(edge_x) min(edge_y) max(edge_z); min(edge_x) max(edge_y) max(edge_z)];
     patch('Faces', face,'Vertices', vertex_gc_boundary, 'FaceAlpha', 0, 'EdgeColor', [0 1 0.2], 'LineWidth', 5);
     axis equal;
-    view(3), grid on;
-    xlabel('X'), ylabel('Y'), zlabel('Z');
-    title('Changed Coordinate System');
     
 end

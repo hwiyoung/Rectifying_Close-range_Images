@@ -25,6 +25,9 @@ function xy_ics = image_coordinate(dem, R, xyz_eo, focal_length, pixel_size, pix
             scale = -p_c(3) / focal_length;
             xy_image = (1 / scale) * p_c / pixel_size;  % 1 - x, 2 - y, unit: px
 
+    %         xy_fcs{i,j}(1)=r_c(2)/2+xy_image(1);
+    %         xy_fcs{i,j}(2)=r_c(1)/2-xy_image(2);
+
             xy_ics{i,j}(1) = xy_image(1) + pixel_cnt(2)/2;       % x direction, column
             xy_ics{i,j}(2) = -xy_image(2) + pixel_cnt(1)/2;       % y direction, row
         end

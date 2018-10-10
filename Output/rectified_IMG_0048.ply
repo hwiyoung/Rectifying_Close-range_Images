@@ -1,0 +1,18 @@
+ply
+format ascii 1.0
+comment author: Hwiyoung Kim
+comment TextureFile rectified_IMG_0048.JPG
+element vertex 4
+property double x
+property double y
+property double z
+element face 2
+property list uint8 int32 vertex_indices
+property list uchar float texcoord
+end_header
+151401.379404 360579.020988 62.525767
+151399.021815 360580.273264 50.597737
+151387.936263 360570.955531 50.349314
+151388.341692 360568.168590 61.843679
+3 2 1 0 6 0.096892 0.000000 0.950640 0.033742 1.000000 0.999387
+3 3 2 0 6 0.000457 0.927607 0.096892 0.000000 1.000000 0.999387

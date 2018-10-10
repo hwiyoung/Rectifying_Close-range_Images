@@ -1,7 +1,12 @@
+% 이미지 화소값 저장
+% 2013. 04. 05 
+% 전의익
+
 function rgb = pixel_color(pixel_cnt, xy_fcs, em, k)
     i_e=size(xy_fcs,1);     % row
     j_e=size(xy_fcs,2);     % column
     
+%     FR = zeros(i_e,j_e);
     for row = 1 : i_e       % row
         for col = 1 : j_e   % column
             if xy_fcs{row, col}(1) < 0 || xy_fcs{row, col}(1) > pixel_cnt(2)      % column
